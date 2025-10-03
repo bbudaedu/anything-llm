@@ -68,6 +68,14 @@ export const SHORTCUTS = {
       window.dispatchEvent(new Event(TOGGLE_LLM_SELECTOR_EVENT));
     },
   },
+  "⌘ + Shift + T": {
+    translationKey: "toggleThinkingProcess",
+    action: () => {
+      // The thinking toggle button handles this shortcut directly
+      // This entry is for documentation purposes in the help dialog
+      // No action needed here as the ThinkingToggleButton component handles it
+    },
+  },
 };
 
 const LISTENERS = {};
@@ -77,6 +85,12 @@ for (const key in SHORTCUTS) {
     .replace("⌘", modifier)
     .replaceAll(" ", "")
     .toLowerCase();
+
+  // Skip thinking toggle shortcut as it's handled by the ThinkingToggleButton component
+  if (listenerKey === `${modifier}+shift+t`) {
+    continue;
+  }
+
   LISTENERS[listenerKey] = SHORTCUTS[key].action;
 }
 

@@ -24,6 +24,7 @@ import {
 import useTextSize from "@/hooks/useTextSize";
 import { useTranslation } from "react-i18next";
 import Appearance from "@/models/appearance";
+import ThinkingToggleButton from "@/components/ThinkingToggle/ThinkingToggleButton";
 
 export const PROMPT_INPUT_ID = "primary-prompt-input";
 export const PROMPT_INPUT_EVENT = "set_prompt_input";
@@ -332,6 +333,7 @@ export default function PromptInput({
                 <LLMSelectorAction />
               </div>
               <div className="flex gap-x-2">
+                <ThinkingToggleButton />
                 <SpeechToText sendCommand={sendCommand} />
               </div>
             </div>

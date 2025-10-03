@@ -1,17 +1,44 @@
 import React, { useState } from "react";
 import { CaretDown } from "@phosphor-icons/react";
+import { useThinkingToggle } from "@/hooks/useThinkingToggle";
+import ProgressIndicator from "@/components/ThinkingToggle/ProgressIndicator";
+import { formatForSimpleDisplay } from "@/utils/thinkingContentFilter";
 
 import AgentAnimation from "@/media/animations/agent-animation.webm";
 import AgentStatic from "@/media/animations/agent-static.png";
 
 export default function StatusResponse({ messages = [], isThinking = false }) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const { showThinking } = useThinkingToggle();
+  
   const currentThought = messages[messages.length - 1];
   const previousThoughts = messages.slice(0, -1);
 
   function handleExpandClick() {
     if (!previousThoughts.length > 0) return;
     setIsExpanded(!isExpanded);
+  }
+
+  // 如果使用者選擇隱藏思考過程，顯示簡潔的進度指示器
+  if (!showThinking) {
+    const allContent = messages.map(m => m.content).join(' ');
+    const simpleDisplayData = formatForSimpleDisplay(allContent);
+    
+    return (
+      <div className="flex justify-center w-full">
+        <div className="w-full max-w-[80%] flex flex-col">
+          <div className="w-full max-w-[800px]">
+            <ProgressIndicator
+              status={isThinking ? "thinking" : "complete"}
+              currentStep={currentThought?.content || "Agent 處理中..."}
+              progress={isThinking ? 50 : 100}
+              showProgress={isThinking}
+              className="max-w-md"
+            />
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (

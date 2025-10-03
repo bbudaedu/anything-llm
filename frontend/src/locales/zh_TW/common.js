@@ -901,6 +901,7 @@ const TRANSLATIONS = {
       chatSettings: "聊天設定",
       help: "顯示鍵盤快捷鍵說明",
       showLLMSelector: "顯示工作區 LLM 選擇器",
+      toggleThinkingProcess: "切換思考過程顯示",
     },
   },
   community_hub: {
@@ -1014,6 +1015,28 @@ const TRANSLATIONS = {
         "使用密碼保護您的 AnythingLLM 系統。如果您忘記這個密碼，將沒有復原方法，因此請務必儲存此密碼。",
       "password-label": "實例密碼",
     },
+  },
+  thinking_toggle: {
+    show_thinking: "顯示思考過程 (Ctrl+Shift+T)",
+    hide_thinking: "隱藏思考過程 (Ctrl+Shift+T)",
+    show_thinking: "顯示思考過程 (Ctrl+Shift+T)",
+    show_thinking_aria: "顯示 AI 思考過程",
+    hide_thinking_aria: "隱藏 AI 思考過程",
+    simple_mode: "簡潔模式",
+    detailed_mode: "詳細模式",
+    toggle_tooltip: "切換思考過程顯示模式",
+  },
+  thinking_toggle: {
+    hide_thinking: "隱藏思考過程 (Ctrl+Shift+T)",
+    show_thinking: "顯示思考過程 (Ctrl+Shift+T)",
+    hide_thinking_aria: "隱藏 AI 思考過程",
+    show_thinking_aria: "顯示 AI 思考過程",
+  },
+  thinking_progress: {
+    thinking: "思考中...",
+    complete: "完成",
+    error: "發生錯誤",
+    idle: "準備中",
   },
 };
 

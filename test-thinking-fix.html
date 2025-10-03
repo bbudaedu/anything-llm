@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>思考過程顯示修復測試</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-case { margin: 20px 0; padding: 15px; border: 1px solid #ccc; }
+        .result { margin: 10px 0; padding: 10px; }
+        .pass { background-color: #d4edda; color: #155724; }
+        .fail { background-color: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <h1>思考過程顯示邏輯修復測試</h1>
+    
+    <div class="test-case">
+        <h3>測試案例 1: 預設設定（應該顯示思考過程）</h3>
+        <div id="test1-result" class="result"></div>
+    </div>
+    
+    <div class="test-case">
+        <h3>測試案例 2: 簡潔模式（應該顯示進度指示器）</h3>
+        <div id="test2-result" class="result"></div>
+    </div>
+    
+    <div class="test-case">
+        <h3>測試案例 3: 詳細模式（應該顯示完整思考過程）</h3>
+        <div id="test3-result" class="result"></div>
+    </div>
+
+    <script>
+        // 模擬修復後的邏輯
+        const DEFAULT_PREFERENCES = {
+            showThinking: true,
+            mode: "detailed"
+        };
+
+        function testThinkingDisplay(preferences) {
+            const isSimpleMode = preferences.mode === "simple";
+            const shouldShowThinking = preferences.showThinking && preferences.mode === "detailed";
+            
+            return {
+                isSimpleMode,
+                shouldShowThinking,
+                displayMode: isSimpleMode ? "progress-indicator" : "full-thinking"
+            };
+        }
+
+        // 測試案例 1: 預設設定
+        const test1 = testThinkingDisplay(DEFAULT_PREFERENCES);
+        document.getElementById('test1-result').innerHTML = 
+            `<strong>結果:</strong> ${test1.displayMode}<br>
+             <strong>isSimpleMode:</strong> ${test1.isSimpleMode}<br>
+             <strong>shouldShowThinking:</strong> ${test1.shouldShowThinking}`;
+        document.getElementById('test1-result').className = 
+            test1.displayMode === "full-thinking" ? "result pass" : "result fail";
+
+        // 測試案例 2: 簡潔模式
+        const test2 = testThinkingDisplay({ showThinking: false, mode: "simple" });
+        document.getElementById('test2-result').innerHTML = 
+            `<strong>結果:</strong> ${test2.displayMode}<br>
+             <strong>isSimpleMode:</strong> ${test2.isSimpleMode}<br>
+             <strong>shouldShowThinking:</strong> ${test2.shouldShowThinking}`;
+        document.getElementById('test2-result').className = 
+            test2.displayMode === "progress-indicator" ? "result pass" : "result fail";
+
+        // 測試案例 3: 詳細模式
+        const test3 = testThinkingDisplay({ showThinking: true, mode: "detailed" });
+        document.getElementById('test3-result').innerHTML = 
+            `<strong>結果:</strong> ${test3.displayMode}<br>
+             <strong>isSimpleMode:</strong> ${test3.isSimpleMode}<br>
+             <strong>shouldShowThinking:</strong> ${test3.shouldShowThinking}`;
+        document.getElementById('test3-result').className = 
+            test3.displayMode === "full-thinking" ? "result pass" : "result fail";
+    </script>
+</body>
+</html>

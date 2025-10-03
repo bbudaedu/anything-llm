@@ -5,6 +5,11 @@ import DOMPurify from "dompurify";
 import { isMobile } from "react-device-detect";
 import ThinkingAnimation from "@/media/animations/thinking-animation.webm";
 import ThinkingStatic from "@/media/animations/thinking-static.png";
+import { useThinkingToggle } from "@/hooks/useThinkingToggle";
+import ProgressIndicator, {
+  SimpleProgressIndicator,
+} from "@/components/ThinkingToggle/ProgressIndicator";
+import { formatForSimpleDisplay } from "@/utils/thinkingContentFilter";
 
 const THOUGHT_KEYWORDS = ["thought", "thinking", "think", "thought_chain"];
 const CLOSING_TAGS = [...THOUGHT_KEYWORDS, "response", "answer"];
@@ -50,6 +55,10 @@ export const ThoughtChainComponent = forwardRef(
       contentIsNotEmpty(initialContent)
     );
     const [isExpanded, setIsExpanded] = useState(expanded);
+
+    // 獲取思考過程顯示設定
+    const { showThinking } = useThinkingToggle();
+
     useImperativeHandle(ref, () => ({
       updateContent: (newContent) => {
         setContent(newContent);
@@ -68,7 +77,34 @@ export const ThoughtChainComponent = forwardRef(
     const autoExpand =
       isThinking && tagStrippedContent.length > THOUGHT_PREVIEW_LENGTH;
     const canExpand = tagStrippedContent.length > THOUGHT_PREVIEW_LENGTH;
+
+    // 格式化簡潔模式顯示資料
+    const simpleDisplayData = formatForSimpleDisplay(content);
+
     if (!content || !content.length || !hasReadableContent) return null;
+
+    // 如果使用者選擇隱藏思考過程（眼睛按鈕關閉），顯示簡潔的進度指示器
+    if (!showThinking) {
+      // 如果內容需要使用者注意（錯誤等），仍然顯示完整內容
+      if (simpleDisplayData.requiresAttention) {
+        // 繼續顯示完整的思考內容
+      } else {
+        // 顯示簡潔的進度指示器
+        return (
+          <div className="flex justify-start items-end transition-all duration-200 w-full md:max-w-[800px]">
+            <div className="pb-2 w-full flex gap-x-5 flex-col relative">
+              <ProgressIndicator
+                status={simpleDisplayData.status}
+                currentStep={simpleDisplayData.currentStep}
+                progress={simpleDisplayData.progress}
+                showProgress={simpleDisplayData.status === "thinking"}
+                className="max-w-md"
+              />
+            </div>
+          </div>
+        );
+      }
+    }
 
     function handleExpandClick() {
       if (!canExpand) return;

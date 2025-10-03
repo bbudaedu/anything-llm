@@ -1023,6 +1023,7 @@ const TRANSLATIONS = {
       chatSettings: "Chat Settings",
       help: "Show keyboard shortcuts help",
       showLLMSelector: "Show workspace LLM Selector",
+      toggleThinkingProcess: "Toggle thinking process display",
     },
   },
   community_hub: {
@@ -1121,6 +1122,27 @@ const TRANSLATIONS = {
         },
       },
     },
+  },
+  thinking_toggle: {
+    show_thinking: "Show thinking process (Ctrl+Shift+T)",
+    hide_thinking: "Hide thinking process (Ctrl+Shift+T)",
+    show_thinking_aria: "Show AI thinking process",
+    hide_thinking_aria: "Hide AI thinking process",
+    simple_mode: "Simple mode",
+    detailed_mode: "Detailed mode",
+    toggle_tooltip: "Toggle thinking process display mode",
+  },
+  thinking_toggle: {
+    hide_thinking: "Hide thinking process (Ctrl+Shift+T)",
+    show_thinking: "Show thinking process (Ctrl+Shift+T)",
+    hide_thinking_aria: "Hide AI thinking process",
+    show_thinking_aria: "Show AI thinking process",
+  },
+  thinking_progress: {
+    thinking: "Thinking...",
+    complete: "Complete",
+    error: "Error occurred",
+    idle: "Ready",
   },
 };
 

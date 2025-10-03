@@ -1,0 +1,137 @@
+{
+  "hooks": [
+    {
+      "id": "code-quality-basic",
+      "name": "Basic Code Quality Check",
+      "description": "Runs ESLint and Prettier on JavaScript/JSX files when saved",
+      "triggers": [
+        {
+          "patterns": ["**/*.{js,jsx,ts,tsx}"],
+          "events": ["save"],
+          "excludePatterns": [
+            "**/node_modules/**",
+            "**/dist/**",
+            "**/build/**",
+            "**/.next/**"
+          ]
+        }
+      ],
+      "actions": [
+        {
+          "type": "lint",
+          "config": {
+            "tool": "eslint",
+            "autoFix": true
+          },
+          "async": false,
+          "timeout": 10000
+        },
+        {
+          "type": "format",
+          "config": {
+            "tool": "prettier"
+          },
+          "async": false,
+          "timeout": 5000
+        },
+        {
+          "type": "notify",
+          "config": {
+            "type": "success",
+            "title": "Code Quality Check",
+            "message": "File linted and formatted successfully"
+          },
+          "async": true
+        }
+      ],
+      "enabled": true,
+      "priority": 1,
+      "debounceMs": 500
+    },
+    {
+      "id": "test-automation",
+      "name": "Automated Testing",
+      "description": "Runs related tests when components are modified",
+      "triggers": [
+        {
+          "patterns": [
+            "**/src/components/**/*.{js,jsx}",
+            "**/frontend/src/**/*.{js,jsx}"
+          ],
+          "events": ["save", "create"],
+          "excludePatterns": [
+            "**/__tests__/**",
+            "**/*.test.{js,jsx}",
+            "**/*.spec.{js,jsx}"
+          ]
+        }
+      ],
+      "actions": [
+        {
+          "type": "test",
+          "config": {
+            "testRunner": "jest",
+            "findRelated": true,
+            "coverage": false,
+            "watch": false
+          },
+          "async": true,
+          "timeout": 30000
+        },
+        {
+          "type": "notify",
+          "config": {
+            "type": "info",
+            "title": "Test Automation",
+            "message": "Running related tests..."
+          },
+          "async": true
+        }
+      ],
+      "enabled": true,
+      "priority": 2,
+      "debounceMs": 1000
+    },
+    {
+      "id": "i18n-compliance",
+      "name": "Internationalization Compliance",
+      "description": "Checks for hardcoded text in React components",
+      "triggers": [
+        {
+          "patterns": [
+            "**/src/components/**/*.{js,jsx}",
+            "**/frontend/src/components/**/*.{js,jsx}"
+          ],
+          "events": ["save"],
+          "excludePatterns": [
+            "**/__tests__/**",
+            "**/locales/**"
+          ]
+        }
+      ],
+      "actions": [
+        {
+          "type": "validate",
+          "config": {
+            "validator": "i18n-compliance",
+            "rules": ["no-hardcoded-text", "translation-keys-exist"]
+          },
+          "async": false,
+          "timeout": 5000
+        },
+        {
+          "type": "notify",
+          "config": {
+            "type": "warning",
+            "title": "i18n Compliance Check",
+            "message": "Checking for internationalization compliance..."
+          },
+          "async": true
+        }
+      ],
+      "enabled": false,
+      "priority": 3,
+      "debounceMs": 800
+    }
+  ]
+}

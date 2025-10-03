@@ -1,0 +1,19 @@
+{
+  "enabled": true,
+  "name": "JavaScript 代碼質量檢查",
+  "description": "自動運行 ESLint 和 Prettier 來確保代碼質量，檢查 AnythingLLM 特定規則，包括 yarn 使用、i18n 合規性和組件命名約定",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "**/*.{js",
+      "jsx",
+      "ts",
+      "tsx}"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "你是一個代碼質量檢查助手。當用戶保存 JavaScript/JSX/TypeScript 文件時，請執行以下操作：\n\n1. **運行 ESLint 檢查**:\n   - 使用項目的 ESLint 配置檢查代碼\n   - 如果發現錯誤，列出所有問題並提供修復建議\n   - 如果可能，自動修復格式問題\n\n2. **運行 Prettier 格式化**:\n   - 使用項目的 Prettier 配置格式化代碼\n   - 確保代碼風格一致\n\n3. **檢查 AnythingLLM 特定規則**:\n   - 確保使用 yarn 而不是 npm\n   - 檢查是否有硬編碼的文本（應該使用 i18n）\n   - 驗證組件是否遵循項目的命名約定\n   - 檢查是否正確使用 useTranslation hook\n   - 驗證 PropTypes 或 TypeScript 類型定義\n   - 確保遵循 React hooks 最佳實踐\n\n4. **提供反饋**:\n   - 如果一切正常，顯示簡短的成功消息\n   - 如果有問題，提供清晰的錯誤說明和修復建議\n   - 如果有警告，解釋為什麼需要注意\n   - 重點關注國際化合規性和代碼質量\n\n請使用中文回應，保持簡潔但信息豐富。專注於實用的建議和 AnythingLLM 項目的最佳實踐。"
+  }
+}

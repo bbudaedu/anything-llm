@@ -116,64 +116,6 @@ export function ThinkingToggleProvider({ children }) {
     initializeContext();
   }, []);
 
-  // Set up polling for system setting changes in multi-user mode
-  useEffect(() => {
-    if (!multiUserMode || isLoading) return;
-
-    const pollInterval = 30000; // Poll every 30 seconds
-    let intervalId;
-
-    const pollSystemSetting = async () => {
-      try {
-        const systemSetting = await Admin.getThinkingDisplaySetting();
-        if (systemSetting.success) {
-          const currentShowThinking = preferences.showThinking;
-          const systemShowThinking = systemSetting.thinking_display_enabled;
-
-          // Only update if the setting has changed
-          if (currentShowThinking !== systemShowThinking) {
-            updatePreferences({
-              showThinking: systemShowThinking,
-              lastUpdated: Date.now(),
-            });
-
-            // Notify user of the change (only if not admin to avoid duplicate notifications)
-            if (!isAdmin) {
-              const message = systemShowThinking
-                ? t(
-                    "thinkingToggle.feedback.enabledByAdmin",
-                    "Thinking process display has been enabled by an administrator"
-                  )
-                : t(
-                    "thinkingToggle.feedback.disabledByAdmin",
-                    "Thinking process display has been disabled by an administrator"
-                  );
-              toast.info(message);
-            }
-          }
-        }
-      } catch (error) {
-        // Silently fail polling to avoid spam in console
-        if (process.env.NODE_ENV === "development") {
-          console.warn(
-            "Failed to poll system thinking display setting:",
-            error
-          );
-        }
-      }
-    };
-
-    // Start polling
-    intervalId = setInterval(pollSystemSetting, pollInterval);
-
-    // Cleanup on unmount
-    return () => {
-      if (intervalId) {
-        clearInterval(intervalId);
-      }
-    };
-  }, [multiUserMode, isLoading, preferences.showThinking]);
-
   // Persist preferences to localStorage only in single-user mode
   useEffect(() => {
     if (!isLoading && !multiUserMode && isLocalStorageAvailable()) {
@@ -314,7 +256,7 @@ export function ThinkingToggleProvider({ children }) {
     }
   };
 
-  // Derived state - 保持向後相容性
+  // Derived state - maintain backward compatibility
   const isSimpleMode = !preferences.showThinking;
 
   // Determine if user can control thinking display
@@ -322,32 +264,11 @@ export function ThinkingToggleProvider({ children }) {
   // In multi-user mode, only admins can control it
   const canControlThinking = !multiUserMode || isAdmin;
 
-  /**
-   * Refresh the thinking display setting from the system
-   * Used to sync with changes made by other admins
-   */
-  const refreshSystemSetting = async () => {
-    if (!multiUserMode) return;
-
-    try {
-      const systemSetting = await Admin.getThinkingDisplaySetting();
-      if (systemSetting.success) {
-        updatePreferences({
-          showThinking: systemSetting.thinking_display_enabled,
-          lastUpdated: Date.now(),
-        });
-      }
-    } catch (error) {
-      console.warn("Failed to refresh system thinking display setting:", error);
-    }
-  };
-
   const contextValue = {
     showThinking: preferences.showThinking,
     isSimpleMode,
     setShowThinking,
     toggleThinking,
-    refreshSystemSetting,
     preferences,
     updatePreferences,
     isLoading,

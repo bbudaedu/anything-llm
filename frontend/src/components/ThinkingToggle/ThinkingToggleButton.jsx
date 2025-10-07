@@ -7,10 +7,10 @@ import { Eye, EyeSlash } from "@phosphor-icons/react";
 import ThinkingDisplayErrorBoundary from "./ThinkingDisplayErrorBoundary";
 
 /**
- * 思考過程切換按鈕組件
- * 提供切換顯示/隱藏 AI 思考過程的功能
- * 支援鍵盤快捷鍵和無障礙功能
- * 僅對 Admin 角色使用者顯示
+ * Thinking process toggle button component
+ * Provides functionality to toggle display/hide AI thinking process
+ * Supports keyboard shortcuts and accessibility features
+ * Only visible to users with appropriate permissions
  */
 function ThinkingToggleButtonInner() {
   const { t } = useTranslation();
@@ -24,8 +24,8 @@ function ThinkingToggleButtonInner() {
   }
 
   /**
-   * 處理鍵盤快捷鍵 Ctrl/Cmd + Shift + T
-   * 使用權限檢查確保只有授權使用者可以使用
+   * Handle keyboard shortcut Ctrl/Cmd + Shift + T
+   * Uses permission check to ensure only authorized users can use it
    */
   const handleKeyboardShortcut = useCallback(
     async (event) => {
@@ -43,7 +43,7 @@ function ThinkingToggleButtonInner() {
     [toggleThinking, withPermissionCheck]
   );
 
-  // 註冊全域鍵盤快捷鍵
+  // Register global keyboard shortcut
   useEffect(() => {
     if (!canControlThinking) return;
 
@@ -54,7 +54,7 @@ function ThinkingToggleButtonInner() {
   }, [handleKeyboardShortcut, canControlThinking]);
 
   /**
-   * 處理按鈕點擊事件
+   * Handle button click event
    */
   const handleClick = useCallback(
     async (event) => {
@@ -73,7 +73,7 @@ function ThinkingToggleButtonInner() {
     [toggleThinking, withPermissionCheck]
   );
 
-  // 如果正在載入偏好設定，顯示載入狀態
+  // Show loading state while preferences are being loaded
   if (isLoading) {
     return (
       <div className="flex items-center justify-center w-[22px] h-[22px] opacity-50">
@@ -82,16 +82,16 @@ function ThinkingToggleButtonInner() {
     );
   }
 
-  // 根據當前狀態決定圖示和工具提示文字
+  // Determine icon and tooltip text based on current state
   const IconComponent = showThinking ? Eye : EyeSlash;
 
-  // 工具提示文字
+  // Tooltip text
   const tooltipText = showThinking
-    ? t("thinkingToggle.button.tooltip.hide", "隱藏思考過程 (Ctrl+Shift+T)")
-    : t("thinkingToggle.button.tooltip.show", "顯示思考過程 (Ctrl+Shift+T)");
+    ? t("thinkingToggle.button.tooltip.hide", "Hide thinking process (Ctrl+Shift+T)")
+    : t("thinkingToggle.button.tooltip.show", "Show thinking process (Ctrl+Shift+T)");
 
-  // 無障礙標籤
-  const ariaLabel = t("thinkingToggle.button.ariaLabel", "切換思考過程顯示");
+  // Accessibility label
+  const ariaLabel = t("thinkingToggle.button.ariaLabel", "Toggle thinking process display");
 
   return (
     <>
@@ -137,10 +137,10 @@ function ThinkingToggleButtonInner() {
 }
 
 /**
- * 思考過程切換按鈕組件（包含錯誤邊界）
- * 提供切換顯示/隱藏 AI 思考過程的功能
- * 支援鍵盤快捷鍵和無障礙功能
- * 僅對有權限的使用者顯示
+ * Thinking process toggle button component (with error boundary)
+ * Provides functionality to toggle display/hide AI thinking process
+ * Supports keyboard shortcuts and accessibility features
+ * Only visible to users with appropriate permissions
  */
 export default function ThinkingToggleButton() {
   return (

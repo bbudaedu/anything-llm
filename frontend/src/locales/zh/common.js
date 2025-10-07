@@ -67,6 +67,31 @@ const TRANSLATIONS = {
     no: "否",
     search: "搜索",
   },
+
+  thinkingToggle: {
+    button: {
+      tooltip: {
+        show: "顯示思考過程",
+        hide: "隱藏思考過程",
+      },
+      ariaLabel: "切換思考過程顯示",
+    },
+    errorFallback: {
+      message: "思考過程顯示遇到錯誤",
+      retry: "重試",
+    },
+    permissions: {
+      adminOnly: "只有管理員可以控制思考過程顯示設定",
+      insufficientPermissions: "您沒有權限修改此設定",
+    },
+    feedback: {
+      enabled: "已為所有使用者啟用思考過程顯示",
+      disabled: "已為所有使用者停用思考過程顯示",
+      error: "更新思考過程顯示設定失敗",
+      enabledByAdmin: "管理員已啟用思考過程顯示",
+      disabledByAdmin: "管理員已停用思考過程顯示",
+    },
+  },
   settings: {
     title: "设置",
     system: "系统",

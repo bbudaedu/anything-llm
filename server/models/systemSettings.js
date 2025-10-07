@@ -33,6 +33,7 @@ const SystemSettings = {
     "feature_flags",
     "meta_page_title",
     "meta_page_favicon",
+    "thinking_display_enabled",
   ],
   supportedFields: [
     "logo_filename",
@@ -54,6 +55,9 @@ const SystemSettings = {
 
     // beta feature flags
     "experimental_live_file_sync",
+
+    // Thinking display control
+    "thinking_display_enabled",
 
     // Hub settings
     "hub_api_key",
@@ -186,6 +190,15 @@ const SystemSettings = {
       } finally {
         new MetaGenerator().clearConfig();
       }
+    },
+    thinking_display_enabled: (update) => {
+      if (typeof update === "boolean")
+        return update === true ? "true" : "false";
+      if (!["true", "false", "enabled", "disabled"].includes(update))
+        return "false";
+      if (update === "enabled") return "true";
+      if (update === "disabled") return "false";
+      return String(update);
     },
     hub_api_key: (apiKey) => {
       if (!apiKey) return null;

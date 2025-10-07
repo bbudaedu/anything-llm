@@ -36,7 +36,7 @@ ThinkingToggle/
 ### 基本使用
 
 ```jsx
-import { useThinkingToggle } from "@/hooks/useThinkingToggle";
+import { useThinkingToggle } from "@/ThinkingToggleContext";
 
 function MyComponent() {
   const { showThinking, isSimpleMode, toggleMode } = useThinkingToggle();
@@ -53,7 +53,7 @@ function MyComponent() {
 ### 在 ThoughtContainer 中使用
 
 ```jsx
-import { useThinkingToggle } from "@/hooks/useThinkingToggle";
+import { useThinkingToggle } from "@/ThinkingToggleContext";
 import { formatForSimpleDisplay } from "@/utils/thinkingContentFilter";
 
 function ThoughtContainer({ content }) {

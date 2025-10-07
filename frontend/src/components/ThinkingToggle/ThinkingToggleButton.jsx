@@ -1,9 +1,10 @@
 import React, { useEffect, useCallback } from "react";
-import { useThinkingToggle } from "@/hooks/useThinkingToggle";
+import { useThinkingToggle } from "@/ThinkingToggleContext";
+import { useThinkingTogglePermissions } from "@/hooks/useThinkingTogglePermissions";
 import { Tooltip } from "react-tooltip";
 import { useTranslation } from "react-i18next";
 import { Eye, EyeSlash } from "@phosphor-icons/react";
-import useUser from "@/hooks/useUser";
+import ThinkingDisplayErrorBoundary from "./ThinkingDisplayErrorBoundary";
 
 /**
  * 思考過程切換按鈕組件
@@ -11,61 +12,65 @@ import useUser from "@/hooks/useUser";
  * 支援鍵盤快捷鍵和無障礙功能
  * 僅對 Admin 角色使用者顯示
  */
-export default function ThinkingToggleButton() {
+function ThinkingToggleButtonInner() {
   const { t } = useTranslation();
-  const { user } = useUser();
   const { showThinking, toggleThinking, isLoading } = useThinkingToggle();
+  const { canControlThinking, withPermissionCheck } =
+    useThinkingTogglePermissions();
 
-  // Only show the button to Admin users
-  const isAdmin = user?.role === "admin";
-  
-  // If user is not admin, don't render the component
-  if (!isAdmin) {
+  // If user cannot control thinking, don't render the component
+  if (!canControlThinking) {
     return null;
   }
 
   /**
    * 處理鍵盤快捷鍵 Ctrl/Cmd + Shift + T
-   * 僅對 Admin 使用者有效
+   * 使用權限檢查確保只有授權使用者可以使用
    */
   const handleKeyboardShortcut = useCallback(
-    (event) => {
-      // Only allow keyboard shortcut for admin users
-      if (!isAdmin) return;
-      
+    async (event) => {
       if (
         (event.ctrlKey || event.metaKey) &&
         event.shiftKey &&
         event.key === "T"
       ) {
         event.preventDefault();
-        toggleThinking();
+        await withPermissionCheck(async () => {
+          return await toggleThinking();
+        });
       }
     },
-    [toggleThinking, isAdmin]
+    [toggleThinking, withPermissionCheck]
   );
 
-  // 註冊全域鍵盤快捷鍵（僅 Admin 使用者）
+  // 註冊全域鍵盤快捷鍵
   useEffect(() => {
-    // Only register keyboard shortcut for admin users
-    if (!isAdmin) return;
-    
+    if (!canControlThinking) return;
+
     document.addEventListener("keydown", handleKeyboardShortcut);
     return () => {
       document.removeEventListener("keydown", handleKeyboardShortcut);
     };
-  }, [handleKeyboardShortcut, isAdmin]);
+  }, [handleKeyboardShortcut, canControlThinking]);
 
   /**
    * 處理按鈕點擊事件
    */
   const handleClick = useCallback(
-    (event) => {
+    async (event) => {
       event.preventDefault();
       event.stopPropagation();
-      toggleThinking();
+
+      const success = await withPermissionCheck(async () => {
+        return await toggleThinking();
+      });
+
+      // Additional feedback could be added here if needed
+      if (!success && process.env.NODE_ENV === "development") {
+        console.warn("Failed to toggle thinking display");
+      }
     },
-    [toggleThinking]
+    [toggleThinking, withPermissionCheck]
   );
 
   // 如果正在載入偏好設定，顯示載入狀態
@@ -82,13 +87,11 @@ export default function ThinkingToggleButton() {
 
   // 工具提示文字
   const tooltipText = showThinking
-    ? t("thinking_toggle.hide_thinking", "隱藏思考過程 (Ctrl+Shift+T)")
-    : t("thinking_toggle.show_thinking", "顯示思考過程 (Ctrl+Shift+T)");
+    ? t("thinkingToggle.button.tooltip.hide", "隱藏思考過程 (Ctrl+Shift+T)")
+    : t("thinkingToggle.button.tooltip.show", "顯示思考過程 (Ctrl+Shift+T)");
 
   // 無障礙標籤
-  const ariaLabel = showThinking
-    ? t("thinking_toggle.hide_thinking_aria", "隱藏 AI 思考過程")
-    : t("thinking_toggle.show_thinking_aria", "顯示 AI 思考過程");
+  const ariaLabel = t("thinkingToggle.button.ariaLabel", "切換思考過程顯示");
 
   return (
     <>
@@ -120,12 +123,7 @@ export default function ThinkingToggleButton() {
           className="w-[18px] h-[18px] pointer-events-none text-theme-text-primary"
           weight={showThinking ? "fill" : "regular"}
         />
-        <span className="sr-only">
-          {showThinking 
-            ? t("thinking_toggle.hide_thinking_aria", "隱藏 AI 思考過程")
-            : t("thinking_toggle.show_thinking_aria", "顯示 AI 思考過程")
-          }
-        </span>
+        <span className="sr-only">{ariaLabel}</span>
       </button>
 
       <Tooltip
@@ -135,5 +133,19 @@ export default function ThinkingToggleButton() {
         className="tooltip !text-xs z-99"
       />
     </>
+  );
+}
+
+/**
+ * 思考過程切換按鈕組件（包含錯誤邊界）
+ * 提供切換顯示/隱藏 AI 思考過程的功能
+ * 支援鍵盤快捷鍵和無障礙功能
+ * 僅對有權限的使用者顯示
+ */
+export default function ThinkingToggleButton() {
+  return (
+    <ThinkingDisplayErrorBoundary>
+      <ThinkingToggleButtonInner />
+    </ThinkingDisplayErrorBoundary>
   );
 }

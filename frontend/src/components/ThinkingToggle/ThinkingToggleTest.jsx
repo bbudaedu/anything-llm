@@ -1,5 +1,5 @@
 import React from "react";
-import { useThinkingToggle } from "@/hooks/useThinkingToggle";
+import { useThinkingToggle } from "@/ThinkingToggleContext";
 import ThinkingToggleButton from "./ThinkingToggleButton";
 import ProgressIndicator, {
   SimpleProgressIndicator,

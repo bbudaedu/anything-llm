@@ -246,6 +246,49 @@ const Admin = {
         return false;
       });
   },
+
+  // Thinking Display Control
+  getThinkingDisplaySetting: async function () {
+    return fetch(`${API_BASE}/admin/thinking-display`, {
+      method: "GET",
+      headers: baseHeaders(),
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(
+            res.statusText || "Error fetching thinking display setting."
+          );
+        }
+        return res.json();
+      })
+      .catch((e) => {
+        console.error(e);
+        return {
+          success: false,
+          thinking_display_enabled: false,
+          error: e.message,
+        };
+      });
+  },
+  updateThinkingDisplaySetting: async function (enabled) {
+    return fetch(`${API_BASE}/admin/thinking-display`, {
+      method: "PUT",
+      headers: baseHeaders(),
+      body: JSON.stringify({ enabled: Boolean(enabled) }),
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(
+            res.statusText || "Error updating thinking display setting."
+          );
+        }
+        return res.json();
+      })
+      .catch((e) => {
+        console.error(e);
+        return { success: false, error: e.message };
+      });
+  },
 };
 
 export default Admin;

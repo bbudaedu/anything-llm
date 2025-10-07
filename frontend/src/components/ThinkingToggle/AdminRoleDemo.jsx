@@ -13,7 +13,7 @@ export default function AdminRoleDemo() {
   React.useEffect(() => {
     // This is a demo - in real usage, the role comes from the actual auth system
     const originalUseUser = require("@/hooks/useUser").default;
-    
+
     // Note: This is just for demonstration purposes
     // In the actual implementation, the role checking works with the real auth system
   }, [mockUserRole]);
@@ -24,7 +24,7 @@ export default function AdminRoleDemo() {
         <h2 className="text-xl font-bold mb-6 text-theme-text-primary">
           Admin Role Checking Demo
         </h2>
-        
+
         <div className="mb-6 p-4 bg-theme-bg-chat-input rounded-lg">
           <h3 className="text-lg font-semibold mb-3 text-theme-text-primary">
             Simulate User Role
@@ -71,9 +71,12 @@ export default function AdminRoleDemo() {
               No User
             </button>
           </div>
-          
+
           <div className="text-sm text-theme-text-secondary mb-4">
-            Current simulated role: <span className="font-mono text-theme-text-primary">{mockUserRole || "null"}</span>
+            Current simulated role:{" "}
+            <span className="font-mono text-theme-text-primary">
+              {mockUserRole || "null"}
+            </span>
           </div>
         </div>
 
@@ -81,29 +84,37 @@ export default function AdminRoleDemo() {
           <h3 className="text-lg font-semibold mb-3 text-theme-text-primary">
             ThinkingToggleButton Visibility Test
           </h3>
-          
+
           <div className="flex items-center gap-4 p-4 bg-theme-bg-secondary rounded-lg">
             <span className="text-theme-text-secondary">Button:</span>
             <div className="flex items-center gap-2">
               <ThinkingToggleButton />
               <span className="text-sm text-theme-text-secondary">
-                {mockUserRole === "admin" 
-                  ? "✅ Visible (Admin user)" 
-                  : "❌ Hidden (Non-admin user)"
-                }
+                {mockUserRole === "admin"
+                  ? "✅ Visible (Admin user)"
+                  : "❌ Hidden (Non-admin user)"}
               </span>
             </div>
           </div>
-          
+
           <div className="mt-4 p-3 bg-theme-bg-secondary rounded-lg">
             <h4 className="text-sm font-medium mb-2 text-theme-text-primary">
               Expected Behavior:
             </h4>
             <ul className="text-sm text-theme-text-secondary space-y-1">
-              <li>• <strong>Admin:</strong> Button should be visible and functional</li>
-              <li>• <strong>Manager:</strong> Button should be hidden</li>
-              <li>• <strong>Default User:</strong> Button should be hidden</li>
-              <li>• <strong>No User:</strong> Button should be hidden</li>
+              <li>
+                • <strong>Admin:</strong> Button should be visible and
+                functional
+              </li>
+              <li>
+                • <strong>Manager:</strong> Button should be hidden
+              </li>
+              <li>
+                • <strong>Default User:</strong> Button should be hidden
+              </li>
+              <li>
+                • <strong>No User:</strong> Button should be hidden
+              </li>
             </ul>
           </div>
         </div>
@@ -113,8 +124,15 @@ export default function AdminRoleDemo() {
             Keyboard Shortcut Test
           </h3>
           <p className="text-sm text-theme-text-secondary mb-2">
-            Press <kbd className="px-2 py-1 bg-theme-bg-secondary rounded text-xs">Ctrl+Shift+T</kbd> 
-            {" "}(or <kbd className="px-2 py-1 bg-theme-bg-secondary rounded text-xs">Cmd+Shift+T</kbd> on Mac)
+            Press{" "}
+            <kbd className="px-2 py-1 bg-theme-bg-secondary rounded text-xs">
+              Ctrl+Shift+T
+            </kbd>{" "}
+            (or{" "}
+            <kbd className="px-2 py-1 bg-theme-bg-secondary rounded text-xs">
+              Cmd+Shift+T
+            </kbd>{" "}
+            on Mac)
           </p>
           <p className="text-xs text-theme-text-secondary">
             Keyboard shortcut should only work when user role is "admin"

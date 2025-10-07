@@ -402,6 +402,13 @@ function adminEndpoints(app) {
               requestedSettings[label] =
                 await SystemSettings.getValueOrFallback({ label }, null);
               break;
+            case "thinking_display_enabled":
+              requestedSettings[label] =
+                (await SystemSettings.getValueOrFallback(
+                  { label },
+                  "false"
+                )) === "true";
+              break;
             default:
               break;
           }
@@ -469,6 +476,11 @@ function adminEndpoints(app) {
             { label: "meta_page_favicon" },
             null
           ),
+          thinking_display_enabled:
+            (await SystemSettings.getValueOrFallback(
+              { label: "thinking_display_enabled" },
+              "false"
+            )) === "true",
         };
         response.status(200).json({ settings });
       } catch (e) {
@@ -554,6 +566,74 @@ function adminEndpoints(app) {
       } catch (e) {
         console.error(e);
         response.sendStatus(500).end();
+      }
+    }
+  );
+
+  // Thinking display control endpoints
+  app.get(
+    "/admin/thinking-display",
+    [validatedRequest],
+    async (_request, response) => {
+      try {
+        const enabled =
+          (await SystemSettings.getValueOrFallback(
+            { label: "thinking_display_enabled" },
+            "false"
+          )) === "true";
+
+        response.status(200).json({
+          success: true,
+          thinking_display_enabled: enabled,
+        });
+      } catch (error) {
+        console.error("Failed to get thinking display setting:", error);
+        response.status(500).json({
+          success: false,
+          message: "Failed to retrieve thinking display setting",
+        });
+      }
+    }
+  );
+
+  app.put(
+    "/admin/thinking-display",
+    [validatedRequest, strictMultiUserRoleValid([ROLES.admin])],
+    async (request, response) => {
+      try {
+        const { enabled } = reqBody(request);
+        const user = await userFromSession(request, response);
+
+        const { success, error } = await SystemSettings._updateSettings({
+          thinking_display_enabled: Boolean(enabled),
+        });
+
+        if (success) {
+          await EventLogs.logEvent(
+            "thinking_display_updated",
+            {
+              enabled: Boolean(enabled),
+              updatedBy: user?.username,
+            },
+            user?.id
+          );
+
+          response.status(200).json({
+            success: true,
+            thinking_display_enabled: Boolean(enabled),
+          });
+        } else {
+          response.status(400).json({
+            success: false,
+            message: error || "Failed to update thinking display setting",
+          });
+        }
+      } catch (error) {
+        console.error("Failed to update thinking display setting:", error);
+        response.status(500).json({
+          success: false,
+          message: "Internal server error",
+        });
       }
     }
   );

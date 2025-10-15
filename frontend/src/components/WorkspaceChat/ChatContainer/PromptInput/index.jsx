@@ -36,6 +36,7 @@ export default function PromptInput({
   isStreaming,
   sendCommand,
   attachments = [],
+  workspace,
 }) {
   const { t } = useTranslation();
   const { isDisabled } = useIsDisabled();
@@ -249,6 +250,7 @@ export default function PromptInput({
         showing={showSlashCommand}
         setShowing={setShowSlashCommand}
         sendCommand={sendCommand}
+        workspace={workspace}
         promptRef={textareaRef}
       />
       <AvailableAgents
